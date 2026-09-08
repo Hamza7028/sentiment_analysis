@@ -40,17 +40,35 @@ python -m nltk.downloader stopwords
 ```
 
 ## Configuration
-The app currently reads the API key from the `api_key` variable in `1.py`.
-Replace the value of `api_key` in `1.py` with your YouTube Data API key, or modify the file to read from an environment variable for better security.
+The app reads the YouTube Data API key from the environment variable `YOUTUBE_API_KEY`.
+Create a local `.env` file (a template is included) or set the environment variable in your shell.
 
-Example (quick edit in `1.py`):
+Example `.env` (copy `.env` and replace the value):
 
-```python
-api_key = 'YOUR_API_KEY_HERE'
+```text
+YOUTUBE_API_KEY=REPLACE_WITH_YOUR_API_KEY
+```
+
+Set it in PowerShell for a single session:
+
+```powershell
+$env:YOUTUBE_API_KEY = 'YOUR_API_KEY_HERE'
+```
+
+Or in Command Prompt:
+
+```cmd
+set YOUTUBE_API_KEY=YOUR_API_KEY_HERE
+```
+
+Or in bash/macOS:
+
+```bash
+export YOUTUBE_API_KEY="YOUR_API_KEY_HERE"
 ```
 
 ## Run
-Start the Flask app:
+Start the Flask app after setting `YOUTUBE_API_KEY`:
 
 ```bash
 python 1.py
