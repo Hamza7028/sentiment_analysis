@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Comment Sentiment Analyzer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .results {
+            margin-top: 20px;
+        }
+
+        .results p {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin: 5px 0;
+        }
+
+        .positive {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .neutral {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .negative {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>YouTube Comment Sentiment Analyzer</h1>
+        <input type="text" id="videoIdInput" placeholder="Enter YouTube Video ID">
+        <button onclick="analyzeComments()">Analyze Comments</button>
+
+        <div class="results" id="results"></div>
+    </div>
+
+    <script>
+        function analyzeComments() {
+            const videoId = document.getElementById('videoIdInput').value;
+            const resultsDiv = document.getElementById('results');
+
+            if (!videoId) {
+                alert("Please enter a YouTube video ID.");
+                return;
+            }
+
+            // Clear previous results
+            resultsDiv.innerHTML = '';
+
+            // Make a POST request to the backend
+            fetch('/analyze', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ videoId: videoId }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    resultsDiv.innerHTML = `<p>Error: ${data.error}</p>`;
+                    return;
+                }
+
+                data.comments.forEach((comment, index) => {
+                    const sentiment = data.sentiments[index];
+                    let sentimentClass = sentiment.toLowerCase();
+                    resultsDiv.innerHTML += `<p class="${sentimentClass}">${comment} - <strong>${sentiment}</strong></p>`;
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+
+</body>
+</html>
